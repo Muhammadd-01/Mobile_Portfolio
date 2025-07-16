@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/hero_section.dart';
-
+import '../widgets/about_section.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -10,7 +10,8 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: const [
-            HeroSection(), // ✅ You already have this!
+            HeroSection(),
+            AboutSection(), // ✅ You already have this!
             // TODO: Header(), About(), Projects(), Footer() etc.
           ],
         ),
