@@ -14,10 +14,11 @@ class PortfolioApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(1360, 768),
       minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Muhammad Affan Portfolio',
-        theme: ThemeData.dark(), // can update later with ThemeProvider
+        theme: ThemeData.dark(), // Change to light if needed
         home: const HomeScreen(),
       ),
     );
