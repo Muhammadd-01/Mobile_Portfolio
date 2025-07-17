@@ -5,7 +5,13 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 class Navbar extends StatefulWidget {
   final ScrollController scrollController;
-  const Navbar({super.key, required this.scrollController});
+  final Map<String, GlobalKey> sectionKeys;
+
+  const Navbar({
+    super.key,
+    required this.scrollController,
+    required this.sectionKeys,
+  });
 
   @override
   State<Navbar> createState() => _NavbarState();
@@ -32,75 +38,84 @@ class _NavbarState extends State<Navbar> {
   }
 
   void scrollToSection(String id) {
-    // Placeholder: implement scroll-to using GlobalKeys
+    final key = widget.sectionKeys[id.toLowerCase()];
+    if (key != null) {
+      final ctx = key.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(
+          ctx,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+          alignment: 0,
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        if (isScrolled)
-          Positioned.fill(
-            child: BackdropFilter(
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: Stack(
+        children: [
+          if (isScrolled)
+            BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Container(color: Colors.transparent),
+              child: Container(
+                height: 80.h,
+                color: Colors.black.withOpacity(0.6),
+              ),
+            ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            height: 80.h,
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isDesktop = constraints.maxWidth > 768;
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _NeonText(
+                      text: "Muhammad Affan",
+                      fontSize: 26.sp,
+                      onTap: () => scrollToSection("home"),
+                    ),
+                    if (isDesktop)
+                      Row(
+                        children: navItems.map((item) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w),
+                            child: _NeonText(
+                              text: item,
+                              fontSize: 16.sp,
+                              onTap: () => scrollToSection(item.toLowerCase()),
+                            ),
+                          );
+                        }).toList(),
+                      )
+                    else
+                      IconButton(
+                        icon: Icon(
+                          isOpen ? LucideIcons.x : LucideIcons.menu,
+                          color: Colors.white,
+                          size: 32.sp,
+                        ),
+                        onPressed: () => setState(() => isOpen = !isOpen),
+                      ),
+                  ],
+                );
+              },
             ),
           ),
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          height: 80.h,
-          decoration: BoxDecoration(
-            color: isScrolled
-                ? Colors.black.withOpacity(0.6)
-                : Colors.transparent,
-            boxShadow: isScrolled
-                ? [BoxShadow(color: Colors.black26, blurRadius: 12)]
-                : [],
-          ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final isDesktop = constraints.maxWidth > 768;
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Logo
-                  _NeonText(
-                    text: "Muhammad Affan",
-                    fontSize: 26.sp,
-                    onTap: () => scrollToSection("hero"),
-                  ),
-
-                  // Nav Items or Hamburger
-                  if (isDesktop)
-                    Row(
-                      children: navItems.map((item) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          child: _NeonText(
-                            text: item,
-                            fontSize: 16.sp,
-                            onTap: () => scrollToSection(item.toLowerCase()),
-                          ),
-                        );
-                      }).toList(),
-                    )
-                  else
-                    IconButton(
-                      icon: Icon(
-                        isOpen ? LucideIcons.x : LucideIcons.menu,
-                        color: Colors.white,
-                        size: 32.sp,
-                      ),
-                      onPressed: () => setState(() => isOpen = !isOpen),
-                    ),
-                ],
-              );
-            },
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -138,8 +153,8 @@ class _NeonTextState extends State<_NeonText> {
             color: Colors.white,
             shadows: hovering
                 ? [
-                    Shadow(color: Colors.cyanAccent, blurRadius: 10),
-                    Shadow(color: Colors.cyan, blurRadius: 5),
+                    const Shadow(color: Colors.cyanAccent, blurRadius: 10),
+                    const Shadow(color: Colors.cyan, blurRadius: 5),
                   ]
                 : [],
           ),
