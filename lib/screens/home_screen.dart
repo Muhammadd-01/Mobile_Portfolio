@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Import widgets
 import '../widgets/navbar.dart';
 import '../widgets/footer.dart';
+import '../widgets/up_button.dart'; // 🔥 Import UpButton
 
 // Sections
 import '../widgets/hero_section.dart';
@@ -13,7 +14,7 @@ import '../widgets/projects_section.dart';
 import '../widgets/resume_section.dart';
 import '../widgets/contact_section.dart';
 
-// Import global keys
+// Global Keys
 import '../models/section_keys.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,12 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 80.h), // Navbar height offset
-
-                // Sections with GlobalKeys for scroll-to
-                Container(
-                  key: sectionKeys['hero'],
-                  child: const HeroSection(),
-                ),
+                // Sections
+                Container(key: sectionKeys['hero'], child: const HeroSection()),
                 Container(
                   key: sectionKeys['about'],
                   child: const AboutSection(),
@@ -70,15 +67,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const ContactSection(),
                 ),
 
-                const Footer(), // Always at bottom
+                const Footer(),
               ],
             ),
           ),
 
           // Floating Navbar
-          Navbar(
-            scrollController: _scrollController,
-            sectionKeys: sectionKeys,
+          Navbar(scrollController: _scrollController, sectionKeys: sectionKeys),
+
+          // Scroll-to-top button 🔥
+          Positioned(
+            bottom: 32,
+            right: 20,
+            child: UpButton(scrollController: _scrollController),
           ),
         ],
       ),
