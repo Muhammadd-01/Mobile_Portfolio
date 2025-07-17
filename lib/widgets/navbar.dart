@@ -58,63 +58,66 @@ class _NavbarState extends State<Navbar> {
       top: 0,
       left: 0,
       right: 0,
-      child: Stack(
-        children: [
-          if (isScrolled)
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Container(
+      child: ClipRect( // 👈 Restricts blur to this area
+        child: Container(
+          height: 80.h,
+          child: Stack(
+            children: [
+              if (isScrolled)
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: Container(
+                    height: 80.h,
+                    color: Colors.black.withOpacity(0.6),
+                  ),
+                ),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
                 height: 80.h,
-                color: Colors.black.withOpacity(0.6),
-              ),
-            ),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            height: 80.h,
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final isDesktop = constraints.maxWidth > 768;
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _NeonText(
-                      text: "Muhammad Affan",
-                      fontSize: 26.sp,
-                      onTap: () => scrollToSection("home"),
-                    ),
-                    if (isDesktop)
-                      Row(
-                        children: navItems.map((item) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            child: _NeonText(
-                              text: item,
-                              fontSize: 16.sp,
-                              onTap: () => scrollToSection(item.toLowerCase()),
-                            ),
-                          );
-                        }).toList(),
-                      )
-                    else
-                      IconButton(
-                        icon: Icon(
-                          isOpen ? LucideIcons.x : LucideIcons.menu,
-                          color: Colors.white,
-                          size: 32.sp,
+                color: Colors.transparent,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isDesktop = constraints.maxWidth > 768;
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _NeonText(
+                          text: "Muhammad Affan",
+                          fontSize: 26.sp,
+                          onTap: () => scrollToSection("home"),
                         ),
-                        onPressed: () => setState(() => isOpen = !isOpen),
-                      ),
-                  ],
-                );
-              },
-            ),
+                        if (isDesktop)
+                          Row(
+                            children: navItems.map((item) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                                child: _NeonText(
+                                  text: item,
+                                  fontSize: 16.sp,
+                                  onTap: () => scrollToSection(item.toLowerCase()),
+                                ),
+                              );
+                            }).toList(),
+                          )
+                        else
+                          IconButton(
+                            icon: Icon(
+                              isOpen ? LucideIcons.x : LucideIcons.menu,
+                              color: Colors.white,
+                              size: 32.sp,
+                            ),
+                            onPressed: () => setState(() => isOpen = !isOpen),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
