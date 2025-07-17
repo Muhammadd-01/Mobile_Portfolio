@@ -1,9 +1,7 @@
-// ignore: deprecated_member_use
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// ignore: unused_import
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart'; // ✅ Add this
 
 class FloatingButtons extends StatefulWidget {
   final ScrollController scrollController;
@@ -39,11 +37,16 @@ class _FloatingButtonsState extends State<FloatingButtons> {
     );
   }
 
-  void openWhatsApp() {
+  Future<void> openWhatsApp() async {
     final message = Uri.encodeComponent(
         "Hi Affan! I was checking out your portfolio and wanted to connect.");
-    final url = "https://wa.me/923128538773?text=$message";
-    html.window.open(url, "_blank");
+    final url = Uri.parse("https://wa.me/923128538773?text=$message");
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -80,14 +83,11 @@ class _FloatingButtonsState extends State<FloatingButtons> {
                 ),
               ),
             ),
-
-          // WhatsApp Button
           Tooltip(
             message: 'Chat with me!',
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Pulse animation
                 AnimatedContainer(
                   duration: const Duration(seconds: 1),
                   width: 60.r,
@@ -113,8 +113,7 @@ class _FloatingButtonsState extends State<FloatingButtons> {
                         ),
                       ],
                     ),
-                    child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 24),
-
+                    child: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white), // ✅ If using `font_awesome_flutter`, replace with FaIcon
                   ),
                 ),
               ],
