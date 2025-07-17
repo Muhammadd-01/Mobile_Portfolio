@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// Import widgets
+// Widgets
 import '../widgets/navbar.dart';
 import '../widgets/footer.dart';
-import '../widgets/up_button.dart'; // 🔥 Import UpButton
+import '../widgets/floating_buttons.dart'; // ✅ New combined button widget
 
 // Sections
 import '../widgets/hero_section.dart';
@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 80.h), // Navbar height offset
+                SizedBox(height: 80.h), // Offset for navbar
                 // Sections
                 Container(key: sectionKeys['hero'], child: const HeroSection()),
                 Container(
@@ -75,12 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
           // Floating Navbar
           Navbar(scrollController: _scrollController, sectionKeys: sectionKeys),
 
-          // Scroll-to-top button 🔥
-          Positioned(
-            bottom: 32,
-            right: 20,
-            child: UpButton(scrollController: _scrollController),
-          ),
+          // ✅ Combined floating buttons (WhatsApp + Scroll-To-Top)
+          FloatingButtons(scrollController: _scrollController),
         ],
       ),
     );
